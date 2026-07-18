@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# Claude Code (config local da máquina)
+.claude/
+
 # Expo
 .expo/
 dist/
@@ -31,6 +34,8 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
+.env.local
 .env*.local
 
 # typescript
