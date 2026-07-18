@@ -1,6 +1,8 @@
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
+  Alert,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -20,6 +22,7 @@ import {
   subtituloFatura,
   totalEmAberto,
 } from '../services/clientePresenter';
+import { criarCobranca } from '../services/pagamentoService';
 import { C, radius, space, type } from '../theme';
 
 const ICONE_STATUS = {
@@ -50,10 +53,23 @@ function filtrar(faturas, filtro) {
   return faturas;
 }
 
-function CardFatura({ fatura }) {
+function CardFatura({ fatura, cliente }) {
   const cores = COR_STATUS[fatura.status];
   const emAberto = estaEmAberto(fatura);
   const valor = formatarValor(fatura.valor);
+  const [pagando, setPagando] = useState(false);
+
+  async function handlePagar() {
+    setPagando(true);
+    try {
+      const { initPoint } = await criarCobranca({ fatura, cliente });
+      await Linking.openURL(initPoint);
+    } catch (erro) {
+      Alert.alert('Não foi possível gerar o pagamento', erro.message);
+    } finally {
+      setPagando(false);
+    }
+  }
 
   return (
     <Card style={styles.cardFatura}>
@@ -84,7 +100,8 @@ function CardFatura({ fatura }) {
       {emAberto ? (
         <Button
           title={`Pagar ${valor}`}
-          onPress={() => {}}
+          onPress={handlePagar}
+          loading={pagando}
           style={styles.botaoPagar}
         />
       ) : null}
@@ -161,7 +178,7 @@ export default function InvoicesScreen() {
       {/* Lista */}
       <View style={styles.lista}>
         {faturas.map((fatura) => (
-          <CardFatura key={fatura.id} fatura={fatura} />
+          <CardFatura key={fatura.id} fatura={fatura} cliente={cliente} />
         ))}
       </View>
     </ScrollView>

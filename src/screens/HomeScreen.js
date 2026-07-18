@@ -1,6 +1,9 @@
 import { Feather } from '@expo/vector-icons';
+import { useState } from 'react';
 import {
+  Alert,
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -21,6 +24,7 @@ import {
   proximaFatura,
   totalEmAberto,
 } from '../services/clientePresenter';
+import { criarCobranca } from '../services/pagamentoService';
 import { C, radius, space, type } from '../theme';
 
 // A saudação usa só o primeiro nome do cliente (ex.: "Marina").
@@ -38,8 +42,21 @@ function CantosMonograma() {
   );
 }
 
-function CardProximaFatura({ fatura }) {
+function CardProximaFatura({ fatura, cliente }) {
   const atrasada = fatura.status === 'atrasado';
+  const [pagando, setPagando] = useState(false);
+
+  async function handlePagar() {
+    setPagando(true);
+    try {
+      const { initPoint } = await criarCobranca({ fatura, cliente });
+      await Linking.openURL(initPoint);
+    } catch (erro) {
+      Alert.alert('Não foi possível gerar o pagamento', erro.message);
+    } finally {
+      setPagando(false);
+    }
+  }
 
   return (
     <Card
@@ -97,7 +114,8 @@ function CardProximaFatura({ fatura }) {
       <Button
         title="Pagar agora"
         icon="zap"
-        onPress={() => {}}
+        onPress={handlePagar}
+        loading={pagando}
         style={styles.botaoPagar}
       />
     </Card>
@@ -184,7 +202,7 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       {/* Próxima fatura */}
-      {fatura ? <CardProximaFatura fatura={fatura} /> : null}
+      {fatura ? <CardProximaFatura fatura={fatura} cliente={cliente} /> : null}
 
       {/* Atalhos */}
       <View style={styles.atalhos}>
