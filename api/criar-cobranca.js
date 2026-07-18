@@ -73,7 +73,11 @@ module.exports = async function handler(req, res) {
     ],
     payer: { email },
     external_reference: `${clienteId}:${faturaId}`, // pra reconciliar no webhook
-    payment_methods: { installments: 12 },
+    payment_methods: {
+      installments: 12,
+      default_installments: 1,
+      installment_amount_paid_by_payer: true,
+    },
     back_urls: {
       success: `${PORTAL_URL}/pagamento/sucesso`,
       failure: `${PORTAL_URL}/pagamento/falha`,
