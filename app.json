@@ -18,7 +18,12 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "name": "Portal JH",
+      "shortName": "Portal JH",
+      "themeColor": "#D42027",
+      "backgroundColor": "#141414",
+      "display": "standalone"
     },
     "plugins": [
       "expo-font",

@@ -74,6 +74,12 @@ src/
 scripts/seed.js                 popula o Firestore com o cliente de teste (Marina) e as
                                 subcoleções produtos/faturas; rodar com `node scripts/seed.js`
 assets/jh-logo.png              monograma JH (importado do projeto de design)
+public/                         servidos como estão na raiz do build web (Expo copia
+                                literalmente para `dist/`); `index.html` customizado
+                                (template do `expo customize`, com manifest/ícones/SW
+                                injetados), `manifest.json` (PWA), `sw.js` (Service Worker
+                                mínimo, cache-first do shell) e `icons/icon-192.png` +
+                                `icons/icon-512.png` (gerados a partir de `jh-logo.png`)
 ```
 
 Design de referência (claude.ai/design): projeto `9af99ff8-758a-4b97-9b4e-7f99855724ce`,
@@ -122,3 +128,4 @@ arquivo `Portal JH.dc.html` — é web/HTML, serve só como referência visual.
 | 2026-07-17 | Integração das 4 telas com o Firestore via `ClienteContext` (busca o cliente por `uid` e carrega produtos/faturas); services `clienteService` (leituras) e `clientePresenter` (adapta os dados crus ao formato dos mocks, então o visual não mudou); `TelaEstado` para loading (ActivityIndicator) e mensagem amigável quando o uid não tem cliente vinculado. Verificado com `expo export` (web + iOS) |
 | 2026-07-19 | Deploy web (Expo Web) configurado na Vercel no mesmo projeto que hospeda `/api`: script `vercel-build` (`expo export -p web`) no `package.json`; `vercel.json` define `buildCommand`/`outputDirectory: dist` e rewrites (`/api/*` preservado como Serverless Functions, demais rotas caem no `index.html` do SPA). Nenhuma lógica de telas ou API alterada. Verificado com `npx expo export -p web` (gera `dist/` sem erros) e `npx serve dist` (HTML e bundle JS servidos com status 200) |
 | 2026-07-19 | Logo do JH (`assets/jh-logo.png`) adicionada na tela de Login, centralizada acima do texto "Portal JH" (96x96, `resizeMode: 'contain'`, mesmo asset já usado no topo da Home). Só a `LoginScreen`; layout e lógica inalterados. Verificado com `npx expo export -p web` |
+| 2026-07-19 | Versão web tornada instalável como PWA: `app.json` → `web.name/shortName/themeColor(#D42027)/backgroundColor(#141414)/display: standalone` (o Metro web injeta isso automaticamente no `<head>`); pasta `public/` criada via `expo customize public/index.html` com `manifest.json`, `sw.js` (Service Worker mínimo, cache do shell + fallback offline) e ícones 192x192/512x512 gerados de `jh-logo.png` (mantendo proporção, sem distorção). Nenhuma lógica de telas ou API alterada. Verificado com `npx expo export -p web` (manifest/ícones/SW presentes em `dist/`) e `npx serve dist` (manifest, sw.js e ícones servidos com 200 e content-type corretos; `<title>`/`theme-color` injetados) |
