@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -69,6 +70,10 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.header}>
+          <Image
+            source={require('../../assets/jh-logo.png')}
+            style={styles.logo}
+          />
           <Text style={[type.label, styles.eyebrow]}>Portal JH</Text>
           <Text style={[type.h1, styles.titulo]}>Bem-vindo de volta</Text>
           <Text style={[type.body, styles.subtitulo]}>
@@ -123,6 +128,13 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: space.xxxl,
+  },
+  logo: {
+    width: 96,
+    height: 96,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginBottom: space.lg,
   },
   eyebrow: {
     color: C.primary,
