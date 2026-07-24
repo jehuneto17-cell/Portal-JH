@@ -48,7 +48,9 @@ src/
                                 estaEmAberto, totalEmAberto, proximaFatura
   navigation/
     RootNavigator.js            user null -> Login; senão -> Tabs (headerShown false)
-    TabsNavigator.js            Início | Produtos | Faturas | Perfil (dentro do ClienteProvider)
+    TabsNavigator.js            Início | Produtos | Faturas | Perfil (dentro do ClienteProvider);
+                                altura e paddingBottom da tab bar somam `useSafeAreaInsets().bottom`
+                                pra não cortar em Android com navegação por gestos / PWA instalado
   screens/
     LoginScreen.js              funcional (e-mail, senha, loading, erros em português)
     HomeScreen.js               Firestore via ClienteContext: marca+sino, saudação
@@ -67,7 +69,10 @@ src/
     Button.js                   variantes 'primary' | 'ghost', ícone opcional, loading,
                                 textColor opcional (ex.: "Sair" ghost com texto vermelho)
     Card.js                     variantes 'light' | 'dark'
-    Input.js                    borda, ícone opcional, outlineStyle 'none'
+    Input.js                    borda, ícone opcional, outlineStyle 'none'; com
+                                `secureTextEntry` + `toggleSecureEntry`, mostra botão de
+                                olho/olho-cortado (Feather) à direita pra alternar a
+                                visibilidade (usado no campo de senha do Login)
     StatusBadge.js              faturas: pago | pendente | atrasado | pausado
                                 produtos: ativo | dev (usa type.badge, caixa normal)
     TelaEstado.js               <TelaCarregando/> (ActivityIndicator central) e
@@ -132,3 +137,4 @@ arquivo `Portal JH.dc.html` — é web/HTML, serve só como referência visual.
 | 2026-07-19 | Versão web tornada instalável como PWA: `app.json` → `web.name/shortName/themeColor(#D42027)/backgroundColor(#141414)/display: standalone` (o Metro web injeta isso automaticamente no `<head>`); pasta `public/` criada via `expo customize public/index.html` com `manifest.json`, `sw.js` (Service Worker mínimo, cache do shell + fallback offline) e ícones 192x192/512x512 gerados de `jh-logo.png` (mantendo proporção, sem distorção). Nenhuma lógica de telas ou API alterada. Verificado com `npx expo export -p web` (manifest/ícones/SW presentes em `dist/`) e `npx serve dist` (manifest, sw.js e ícones servidos com 200 e content-type corretos; `<title>`/`theme-color` injetados) |
 | 2026-07-19 | Corrigidos os últimos pontos com o ícone padrão do Expo: `assets/favicon.png` (48x48) regenerado a partir de `jh-logo.png` (era a seta azul do projeto novo do Expo, referenciada em `app.json` → `web.favicon` e usada para gerar o `favicon.ico` do export) e meta tags Open Graph (`og:title`, `og:description`, `og:image` apontando para `icons/icon-512.png` em URL absoluta, `og:type`) adicionadas em `public/index.html` para prévias corretas em WhatsApp/redes sociais. Verificado com `npx expo export -p web` + `npx serve dist` |
 | 2026-07-23 | Tela de Produtos passa a exibir o valor mensal de cada produto (campo `valor`, adicionado pelo admin no Firestore): `clientePresenter.formatarValorProduto` formata como "R$ 249,00/mês" reaproveitando `formatarValor`, ou retorna "—" quando o campo está ausente/zero (evita parecer erro). Exibido no card do produto, alinhado à direita abaixo do `StatusBadge`, com `C.textMuted`. Verificado com `npx expo export -p web` |
+| 2026-07-23 | Dois ajustes de UX: (1) tab bar (bottom tabs) parava colada na borda inferior em Android/PWA instalado — `TabsNavigator` agora soma `useSafeAreaInsets().bottom` à altura e ao `paddingBottom` do `tabBarStyle` (base de 56 + inset), então respeita a barra de gestos do Android e a safe area do PWA; no iOS nativo o comportamento já era coberto pela própria lib de bottom-tabs, então o insets extra só passa a somar quando o inset é > 0; (2) campo de senha do Login ganhou botão de olho/olho-cortado: `Input` aceita `secureTextEntry` + `toggleSecureEntry` e alterna a visibilidade internamente (ícone Feather `eye`/`eye-off`, cor `C.textMuted`), usado só na `LoginScreen`. Verificado com `npx expo export -p web` |

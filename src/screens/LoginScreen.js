@@ -99,6 +99,7 @@ export default function LoginScreen() {
             value={senha}
             onChangeText={setSenha}
             secureTextEntry
+            toggleSecureEntry
             autoCapitalize="none"
             editable={!carregando}
             onSubmitEditing={handleEntrar}

@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ClienteProvider } from '../context/ClienteContext';
 import HomeScreen from '../screens/HomeScreen';
@@ -17,7 +18,13 @@ const ICONES = {
   Perfil: 'user',
 };
 
+// Altura base da tab bar (ícone + label + respiros), sem contar a safe area.
+const ALTURA_BASE_TAB_BAR = 56;
+
 export default function TabsNavigator() {
+  const insets = useSafeAreaInsets();
+  const paddingBottom = insets.bottom + space.sm;
+
   return (
     <ClienteProvider>
       <Tab.Navigator
@@ -28,6 +35,8 @@ export default function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: C.bg,
           borderTopColor: C.border,
+          height: ALTURA_BASE_TAB_BAR + paddingBottom,
+          paddingBottom,
         },
         tabBarLabelStyle: {
           fontFamily: fonts.inter500,
