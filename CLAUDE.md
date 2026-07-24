@@ -56,7 +56,8 @@ src/
                                 atrasada mais próxima; B escura se atrasada), atalhos com
                                 contagem real e lista "Seus produtos"
     ProductsScreen.js           Firestore: título, subtítulo e cards de produto (ícone por
-                                tipo, nome, tipo, StatusBadge, URL + "Abrir")
+                                tipo, nome, tipo, StatusBadge, valor mensal formatado
+                                (ou "—" se ausente/0), URL + "Abrir")
     InvoicesScreen.js           Firestore: resumo escuro (total em aberto = soma pendentes+
                                 atrasadas), filtros Todas|Pendentes|Pagas e cards de fatura
                                 (ícone de status, mesRef, valor, badge, "Pagar")
@@ -130,3 +131,4 @@ arquivo `Portal JH.dc.html` — é web/HTML, serve só como referência visual.
 | 2026-07-19 | Logo do JH (`assets/jh-logo.png`) adicionada na tela de Login, centralizada acima do texto "Portal JH" (96x96, `resizeMode: 'contain'`, mesmo asset já usado no topo da Home). Só a `LoginScreen`; layout e lógica inalterados. Verificado com `npx expo export -p web` |
 | 2026-07-19 | Versão web tornada instalável como PWA: `app.json` → `web.name/shortName/themeColor(#D42027)/backgroundColor(#141414)/display: standalone` (o Metro web injeta isso automaticamente no `<head>`); pasta `public/` criada via `expo customize public/index.html` com `manifest.json`, `sw.js` (Service Worker mínimo, cache do shell + fallback offline) e ícones 192x192/512x512 gerados de `jh-logo.png` (mantendo proporção, sem distorção). Nenhuma lógica de telas ou API alterada. Verificado com `npx expo export -p web` (manifest/ícones/SW presentes em `dist/`) e `npx serve dist` (manifest, sw.js e ícones servidos com 200 e content-type corretos; `<title>`/`theme-color` injetados) |
 | 2026-07-19 | Corrigidos os últimos pontos com o ícone padrão do Expo: `assets/favicon.png` (48x48) regenerado a partir de `jh-logo.png` (era a seta azul do projeto novo do Expo, referenciada em `app.json` → `web.favicon` e usada para gerar o `favicon.ico` do export) e meta tags Open Graph (`og:title`, `og:description`, `og:image` apontando para `icons/icon-512.png` em URL absoluta, `og:type`) adicionadas em `public/index.html` para prévias corretas em WhatsApp/redes sociais. Verificado com `npx expo export -p web` + `npx serve dist` |
+| 2026-07-23 | Tela de Produtos passa a exibir o valor mensal de cada produto (campo `valor`, adicionado pelo admin no Firestore): `clientePresenter.formatarValorProduto` formata como "R$ 249,00/mês" reaproveitando `formatarValor`, ou retorna "—" quando o campo está ausente/zero (evita parecer erro). Exibido no card do produto, alinhado à direita abaixo do `StatusBadge`, com `C.textMuted`. Verificado com `npx expo export -p web` |

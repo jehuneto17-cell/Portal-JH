@@ -19,6 +19,16 @@ export function formatarValor(valor) {
   return `R$ ${numero.toFixed(2).replace('.', ',')}`;
 }
 
+// Valor mensal do produto para o card de Produtos. Sem valor definido (campo
+// ausente ou 0) retorna "—" em vez de "R$ 0,00", pra não parecer erro.
+export function formatarValorProduto(valor) {
+  const numero = Number(valor) || 0;
+  if (numero <= 0) {
+    return '—';
+  }
+  return `${formatarValor(numero)}/mês`;
+}
+
 // "R$ 429 em aberto" — resumo curto usado no atalho da Início (sem centavos).
 export function formatarTotalEmAberto(total) {
   const numero = Number(total) || 0;

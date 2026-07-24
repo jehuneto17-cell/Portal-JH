@@ -12,7 +12,7 @@ import Card from '../components/Card';
 import StatusBadge from '../components/StatusBadge';
 import { TelaCarregando, TelaMensagem } from '../components/TelaEstado';
 import { useCliente } from '../context/ClienteContext';
-import { iconePorTipo } from '../services/clientePresenter';
+import { formatarValorProduto, iconePorTipo } from '../services/clientePresenter';
 import { C, radius, space, type } from '../theme';
 
 function CardProduto({ produto }) {
@@ -26,7 +26,12 @@ function CardProduto({ produto }) {
           <Text style={[type.bodyMed, styles.nome]}>{produto.nome}</Text>
           <Text style={[type.caption, styles.tipo]}>{produto.tipo}</Text>
         </View>
-        <StatusBadge status={produto.status} />
+        <View style={styles.ladoDireito}>
+          <StatusBadge status={produto.status} />
+          <Text style={[type.caption, styles.valor]}>
+            {formatarValorProduto(produto.valor)}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.rodape}>
@@ -132,6 +137,13 @@ const styles = StyleSheet.create({
     color: C.text,
   },
   tipo: {
+    color: C.textMuted,
+  },
+  ladoDireito: {
+    alignItems: 'flex-end',
+    gap: space.xs,
+  },
+  valor: {
     color: C.textMuted,
   },
   rodape: {
